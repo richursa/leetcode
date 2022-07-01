@@ -7,23 +7,48 @@ type ListNode struct {
 }
 
 func reverseKGroup(head *ListNode, k int) *ListNode {
-	count := 0
+	currentLength := 0
 	headClone := head
-	var prevHead, newHead, prev, next, newKhead *ListNode
-	firstHead := false
-	prevHead = head
+	newHead := head
+	lastTail := head
 	for headClone != nil {
-		walker := headClone
-		for i := 0; i < k; i++ {
-			if walker == nil {
-				return newHead
+		if currentLength%k == 0 {
+			currentHead, tail, next := reverseKNodes(headClone, k)
+			if currentLength == 0 {
+				newHead = currentHead
+				lastTail = tail
+			} else {
+				lastTail.Next = currentHead
+				lastTail = tail
 			}
-			walker = walker.Next
-			if i == 0 {
-				newKhead = walker
-			}
+			currentLength = currentLength + k
+			headClone = next
 		}
-
 	}
 	return newHead
+}
+
+func reverseKNodes(head *ListNode, k int) (*ListNode, *ListNode, *ListNode) {
+	headClone := head
+	tail := headClone
+	length := 0
+	for headClone != nil && length < k {
+		length++
+		tail = headClone
+		headClone = headClone.Next
+	}
+	if length < k {
+		return head, tail, nil
+	}
+	headClone = head
+	var prev, temp *ListNode
+	currentLength := 0
+	for headClone != nil && currentLength < k {
+		temp = headClone.Next
+		headClone.Next = prev
+		prev = headClone
+		headClone = temp
+		currentLength++
+	}
+	return prev, head, temp
 }
