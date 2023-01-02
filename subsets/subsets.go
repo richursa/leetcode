@@ -6,9 +6,6 @@ func main() {
 	fmt.Println(subsets([]int{1, 2, 3}))
 }
 
-var sets [][]int
-var current []int
-
 func subsets(nums []int) [][]int {
 	sets = [][]int{}
 	current = make([]int, len(nums)+1)
